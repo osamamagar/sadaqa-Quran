@@ -1,0 +1,13 @@
+.env
+migrations/
+.idea/
+_pycache_/
+/migrations/
+accounts/migrations/
+tracks/migrations/
+donations/migrations/
+accounts/_pycache_/
+tracks/_pycache_/
+categories/_pycache_/
+donations/_pycache_/
+sadaqa/_pycache_/
