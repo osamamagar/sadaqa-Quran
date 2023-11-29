@@ -3,7 +3,7 @@ from rest_framework import generics
 from tracks.models import *
 from .serializers import *
 from rest_framework.authentication import SessionAuthentication,TokenAuthentication
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,  IsAuthenticatedOrReadOnly
 
 
 
@@ -12,6 +12,17 @@ class ListComment(generics.ListCreateAPIView):
     authentication_classes=(SessionAuthentication, TokenAuthentication)
     queryset = Comment.objects.all()
     serializer_class = CommentSerializers
+
+    def list(self,request,*args,**kwargs):
+        queryset= self.get_queryset()
+        serializer = self.get_serializer(queryset,many=True)
+
+        for comment in serializer.data:
+            comments_id = comment['id']
+            comment['Replies']= ReplySerializers(
+                ReplyComment.objects.filter(comment_id=comments_id), 
+                many=True, context=self.get_serializer_context()).data
+        return Response({"comments": serializer.data})
 
 class DetailComment(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(AllowAny,)
@@ -54,3 +65,17 @@ class DetailTrack(generics.RetrieveUpdateDestroyAPIView):
             Comment.objects.filter(track_id=instance.id),many=True
         ).data])
 
+
+class ReplyList(generics.ListCreateAPIView):
+    permission_classes=(AllowAny,)
+    authentication_classes=(SessionAuthentication, TokenAuthentication)
+    queryset = ReplyComment.objects.all()
+    serializer_class = ReplySerializers
+
+
+
+class DetailReply(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes=(AllowAny,)
+    authentication_classes=(SessionAuthentication, TokenAuthentication)
+    queryset = ReplyComment.objects.all()
+    serializer_class = ReplySerializers

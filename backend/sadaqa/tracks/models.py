@@ -30,6 +30,8 @@ class Like(models.Model):
     def __str__(self):
         return f" Like on Track  : {self.track} - By User : {self.user} - ID User Is : {self.user.id} - At : {self.created_at}"
 
+    class Meta:
+        unique_together = ['user', 'track']
 
 class Comment(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
@@ -41,6 +43,9 @@ class Comment(models.Model):
     def __str__(self):
         return f" Comment  : {self.content} - By User : {self.user} - ID User Is : {self.user.id} - At : {self.created_at}"
 
+    def increment_like(self):
+        self.commentLike += 1
+        self.save()
 
 class CommentLike(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
@@ -49,6 +54,13 @@ class CommentLike(models.Model):
 
     def __str__(self):
         return f" Like on Comment  : {self.comment.content} - By User : {self.user} - ID User Is : {self.user.id} - At : {self.created_at}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.comment.increment_like()
+
+    class Meta:
+        unique_together = ['user', 'comment']
 
 
 
@@ -68,4 +80,27 @@ class Playlist(models.Model):
 
 
 
+class ReplyComment(models.Model):
+    user = models.ForeignKey(MyUser,on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment,on_delete=models.CASCADE)
+    replyLike = models.PositiveIntegerField(default=0)
+    replyContent = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f" Reply : {self.replyContent} On Comment : {self.comment.content} - By User : {self.user} - ID User Is : {self.user.id} - At : {self.created_at}"
+
+    def increment_like(self):
+        self.replyLike += 1
+        self.save()
+class ReplyLike(models.Model):
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    reply = models.ForeignKey(ReplyComment, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
     
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.reply.increment_like()
+
+    class Meta:
+        unique_together = ['user', 'reply']

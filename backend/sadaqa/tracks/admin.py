@@ -6,4 +6,6 @@ admin.site.register(Like)
 admin.site.register(Comment)
 admin.site.register(CommentLike)
 admin.site.register(Playlist)
+admin.site.register(ReplyComment)
+admin.site.register(ReplyLike)
 
