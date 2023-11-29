@@ -16,7 +16,7 @@ class Track(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return f"Name Of Track : {self.name} - That Published by User : {self.user} - ID User Is : {self.user.id}"
     
 
 
@@ -28,7 +28,7 @@ class Like(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f" Like on Track  : {self.track} - By User : {self.user} - At : {self.created_at}"
+        return f" Like on Track  : {self.track} - By User : {self.user} - ID User Is : {self.user.id} - At : {self.created_at}"
 
 
 class Comment(models.Model):
@@ -39,7 +39,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f" Comment  : {self.content} - By User : {self.user} - At : {self.created_at}"
+        return f" Comment  : {self.content} - By User : {self.user} - ID User Is : {self.user.id} - At : {self.created_at}"
 
 
 class CommentLike(models.Model):
@@ -48,7 +48,7 @@ class CommentLike(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f" Like on Comment  : {self.comment.content} - By User : {self.user} - At : {self.created_at}"
+        return f" Like on Comment  : {self.comment.content} - By User : {self.user} - ID User Is : {self.user.id} - At : {self.created_at}"
 
 
 
@@ -64,7 +64,7 @@ class Playlist(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return f"Name of Playlist : {self.name} - Created By User : {self.user} - ID User is {self.user.id}"
 
 
 
