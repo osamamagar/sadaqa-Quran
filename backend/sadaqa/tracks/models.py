@@ -12,13 +12,24 @@ class Track(models.Model):
     user = models.ForeignKey(MyUser,on_delete=models.CASCADE)
     likes = models.PositiveIntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
+    reposted=models.PositiveBigIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Name Of Track : {self.name} - That Published by User : {self.user} - ID User Is : {self.user.id}"
     
+    def increment_likeTrack(self):
+        self.likes += 1
+        self.save()
 
+    def increment_repostedTrack(self):
+        self.reposted += 1
+        self.save()
+
+    def increment_viewsTrack(self):
+        self.views += 1
+        self.save()
 
 
 
@@ -32,6 +43,12 @@ class Like(models.Model):
 
     class Meta:
         unique_together = ['user', 'track']
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.track.increment_likeTrack()
+
+
 
 class Comment(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
@@ -104,3 +121,28 @@ class ReplyLike(models.Model):
 
     class Meta:
         unique_together = ['user', 'reply']
+
+
+class RepostedTracks(models.Model):
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, related_name='reposted_tracks')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f" Repost Track  : {self.track.name} - By User : {self.user} - ID User Is : {self.user.id} - At : {self.created_at}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.track.increment_repostedTrack()
+
+class TrackView(models.Model):
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True, blank=True)
+    track = models.ForeignKey(Track, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # def __str__(self):
+    #     return f"View on Track: {self.track.name} - By User: {self.user} - ID User: {self.user.id} - At: {self.created_at}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.track.increment_viewsTrack()

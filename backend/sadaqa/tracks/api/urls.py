@@ -10,5 +10,7 @@ urlpatterns=[
     path('comments/<int:pk>/', DetailComment.as_view(), name="DetailComment"),
     path('reply/', ReplyList.as_view(), name="ReplyList"),
     path('reply/<int:pk>/', DetailReply.as_view(), name="DetailReply"),
+    path('reposted/', RepostedList.as_view(), name="RepostedList"),
+    path('reposted/<int:pk>/', DetailReposted.as_view(), name="DetailReposted"),
 
 ]

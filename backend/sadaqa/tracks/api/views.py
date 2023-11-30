@@ -46,6 +46,13 @@ class TrackList(generics.ListCreateAPIView):
             track ['comments']=CommentSerializers(
                 Comment.objects.filter(track_id=tracks_id),
                 many=True, context=self.get_serializer_context()).data
+            for comment in serializer.data:
+                comments_id = comment['id']
+                comment['Replies']= ReplySerializers(
+                    ReplyComment.objects.filter(comment_id=comments_id), 
+                    many=True, context=self.get_serializer_context()).data
+            return Response({"comments": serializer.data})
+
         return Response(serializer.data)
 
 
@@ -79,3 +86,17 @@ class DetailReply(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes=(SessionAuthentication, TokenAuthentication)
     queryset = ReplyComment.objects.all()
     serializer_class = ReplySerializers
+
+
+class RepostedList(generics.ListCreateAPIView):
+    permission_classes=(AllowAny,)
+    authentication_classes=(SessionAuthentication, TokenAuthentication)
+    queryset = RepostedTracks.objects.all()
+    serializer_class = RepostedSerializers
+
+class DetailReposted(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes=(AllowAny,)
+    authentication_classes=(SessionAuthentication, TokenAuthentication)
+    queryset = RepostedTracks.objects.all()
+    serializer_class = RepostedSerializers
+    

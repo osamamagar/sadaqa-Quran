@@ -8,4 +8,6 @@ admin.site.register(CommentLike)
 admin.site.register(Playlist)
 admin.site.register(ReplyComment)
 admin.site.register(ReplyLike)
+admin.site.register(RepostedTracks)
+admin.site.register(TrackView)
 
