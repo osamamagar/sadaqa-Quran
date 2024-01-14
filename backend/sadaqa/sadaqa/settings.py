@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     #third party
     'rest_framework',
     'rest_framework.authtoken', 
+    'rest_auth',
     #local
     'tracks.apps.TracksConfig',
     'accounts.apps.AccountsConfig',
