@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     #third party
     'rest_framework',
     'rest_framework.authtoken', 
-    'rest_auth',
+    'rest_auth', #for login,logout and reset
     #local
     'tracks.apps.TracksConfig',
     'accounts.apps.AccountsConfig',
