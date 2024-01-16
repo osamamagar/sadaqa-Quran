@@ -3,5 +3,8 @@ from .models import *
 
 # Register your models here.
 admin.site.register(MyUser)
+admin.site.register(Notification)
+admin.site.register(PasswordResetToken)
+
 
 

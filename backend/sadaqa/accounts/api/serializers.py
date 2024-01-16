@@ -52,16 +52,5 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-class SuperuserMyUserSerializer(serializers.ModelSerializer):
-    country_name = serializers.CharField(source='country.name', read_only=True)
 
-    class Meta:
-        model = MyUser
-        fields = ('id', 'first_name', 'last_name', 'username', 'phone', 'email', 'image', 'birth_date',
-                  'facebook_profile', 'country', 'country_name', 'is_email_verified', 'created_at')
-
-        extra_kwargs = {
-            'id': {'read_only': True},
-            'username': {'read_only': True},
-        }
 
