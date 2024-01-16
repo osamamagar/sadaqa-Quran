@@ -1,4 +1,4 @@
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
@@ -25,3 +25,14 @@ class RetrieveUpdateDestroyMyUser(generics.RetrieveUpdateDestroyAPIView):
     serializer_class=MyUserSerilizers
 
 
+class ListSuperuserMyUser(generics.ListAPIView):
+    permission_classes = (IsAdminUser,)  # Assuming you have the IsAdminUser permission
+    authentication_classes = (TokenAuthentication,)
+    queryset = MyUser.objects.all()
+    serializer_class = SuperuserMyUserSerializer
+
+class RetrieveUpdateDestroySuperuserMyUser(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAdminUser,)  # Assuming you have the IsAdminUser permission
+    authentication_classes = (TokenAuthentication,)
+    queryset = MyUser.objects.all()
+    serializer_class = SuperuserMyUserSerializer

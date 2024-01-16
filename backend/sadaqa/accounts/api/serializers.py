@@ -20,15 +20,6 @@ class MyUserSerilizers(serializers.ModelSerializer):
             'is_email_verified': {'read_only': True},
             'created_at': {'read_only': True}, }
 
-
-# class UserRegistrationSerializers(serializers.ModelSerializer):
-#     country_name =serializers.CharField(source='country.name',read_only=True)
-#     class Meta:
-#         model = MyUser
-#         fields = ('first_name', 'last_name', 'username', 'password', 'email', 'birth_date', 'country_name')
-#         extra_kwargs = {'first_name': {'required': True}, 'last_name': {'required': True}}
-
-
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True,
         validators=[UniqueValidator(queryset=MyUser.objects.all())])
@@ -60,3 +51,17 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+class SuperuserMyUserSerializer(serializers.ModelSerializer):
+    country_name = serializers.CharField(source='country.name', read_only=True)
+
+    class Meta:
+        model = MyUser
+        fields = ('id', 'first_name', 'last_name', 'username', 'phone', 'email', 'image', 'birth_date',
+                  'facebook_profile', 'country', 'country_name', 'is_email_verified', 'created_at')
+
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'username': {'read_only': True},
+        }
+

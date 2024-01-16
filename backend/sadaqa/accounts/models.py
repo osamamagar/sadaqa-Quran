@@ -17,9 +17,12 @@ class MyUser(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
     activation_link_created_at = models.DateTimeField(null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    facebook_profile = models.URLField(max_length=200, blank=True, null=True, validators=[URLValidator()])
+    facebook_profile = models.URLField(max_length=200,blank=True,null=True,validators=[URLValidator()])
     country = models.CharField(max_length=200,  null=True, choices=CountryField().choices + [('', 'Select Country')])
     # country = models.CharField(null=True,blank=True)
+
+    def __str__(self):
+        return f"User Name is : ' {self.username} ' || ID is : ' {self.id} ' || Email is '{self.email}' || From ' {self.country} ' "
 
     groups = models.ManyToManyField(
         'auth.Group',
