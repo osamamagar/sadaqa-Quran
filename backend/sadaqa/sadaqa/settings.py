@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken', 
     'rest_auth', #for login,logout and reset
     #local
+    'django_countries',
     'tracks.apps.TracksConfig',
     'accounts.apps.AccountsConfig',
 

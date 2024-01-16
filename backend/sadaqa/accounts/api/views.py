@@ -14,12 +14,9 @@ class ListMyUser(generics.ListAPIView):
     serializer_class=MyUserSerilizers
 
 
-class CreateMyUser(generics.CreateAPIView):
-    permission_classes=(AllowAny,)
-    authentication_classes=(TokenAuthentication,)
-    queryset= MyUser.objects.all()
-    serializer_class=UserRegistrationSerializers
-
+class RegisterUserAPIView(generics.CreateAPIView):
+  permission_classes = (AllowAny,)
+  serializer_class = RegisterSerializer
 
 class RetrieveUpdateDestroyMyUser(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(AllowAny,)
