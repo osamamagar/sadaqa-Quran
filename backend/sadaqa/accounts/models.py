@@ -4,6 +4,7 @@ from django_countries.fields import CountryField
 from django.core.validators import URLValidator
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
+import uuid
 
 
 class MyUser(AbstractUser):
@@ -83,6 +84,6 @@ class Notification(models.Model):
 
 
 class PasswordResetToken(models.Model):
-    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-    token = models.CharField(max_length=255)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)

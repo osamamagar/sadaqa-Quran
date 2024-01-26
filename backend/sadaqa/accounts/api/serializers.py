@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from accounts.models import *
 from rest_framework.response import Response
-from rest_framework import status
+from django.utils.crypto import get_random_string
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
@@ -46,7 +46,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'])
+            last_name=validated_data['last_name'],
+            activation_code=get_random_string(6),  # Generate activation code
+        )
         
         user.set_password(validated_data['password'])
         user.save()
