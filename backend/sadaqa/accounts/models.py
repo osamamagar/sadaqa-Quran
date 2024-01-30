@@ -39,6 +39,10 @@ class MyUser(AbstractUser):
         super().save(*args, **kwargs)
         if created:
             Token.objects.create(user=self)
+    
+    @classmethod
+    def get_all_users(cls):
+        return cls.objects.all()
 
 
     groups = models.ManyToManyField(

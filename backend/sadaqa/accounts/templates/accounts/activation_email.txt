@@ -1,9 +1,0 @@
-Hello {{ user.username }},
-
-Thank you for registering on YourSiteName.
-
-To activate your account, please click the following link:
-{{ activation_link }}
-
-Best regards,
-YourSiteName Team

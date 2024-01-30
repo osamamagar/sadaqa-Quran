@@ -25,18 +25,14 @@ from django.utils.encoding import smart_str
 
 
 ####################################---------  admin panel / view all user data  -------------###################################
-class ListMyUser(generics.ListAPIView):
-    permission_classes=(IsAdminUser,IsAuthenticated)
-    authentication_classes=(TokenAuthentication,)
-    queryset= MyUser.objects.all()
-    serializer_class=MyUserSerilizers
-
-####################################---------  register  -------------###################################
-@method_decorator(csrf_exempt, name='dispatch')
-class RegisterUserAPIView(generics.CreateAPIView):
-    queryset = MyUser.objects.all()
-    permission_classes = (AllowAny,)
-    serializer_class = RegisterSerializer
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getAllUsers(request):
+    users = MyUser.get_all_users()
+    serlized_users = []
+    for user in users:
+        serlized_users.append(MyUserSerilizers(user).data)
+    return Response({"data":serlized_users, "massage":"data receved"},status=200)
 
 ####################################---------  login  -------------###################################
 @permission_classes([AllowAny])
@@ -47,12 +43,8 @@ def user_login(request):
     user = authenticate(username=username, password=password)
     if user :
         if user.is_email_verified or user.is_superuser:
-            # login(request, user)
-    #         return Response({"success": "Logged in successfully."}, status=200)
-    #     return Response({'error': 'Email is not activated',"email":user.email}, 401)
-    # return Response({'error': 'Invalid credentials'}, 401)
             token, created = Token.objects.get_or_create(user=user)
-            return Response({"token": "Token was generated successfully", "Message": "Logged in successfully."}, status=200)
+            return Response({"token": token.key, "Message": "welcome to SaDaQa page"}, status=200)
         return Response({'error': 'Email is not activated', "email": user.email}, 401)
     return Response({'error': 'Invalid credentials'}, 401)
             
@@ -60,26 +52,18 @@ def user_login(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def user_logout(request):
-    # request.user.auth_token.delete()
-    # logout(request)
+
     request.auth.delete()
     return Response('User Logged out successfully',200)    
 
-
-
-######################3###### Update, Retrieve & Destroy ########################
+############################ Update, Retrieve & Destroy ########################
 class RetrieveUpdateDestroyMyUser(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAdminUser,IsAuthenticated)
     authentication_classes=(TokenAuthentication,)
     queryset= MyUser.objects.all()
     serializer_class=MyUserSerilizers
 
-############################# Activate Email ################################
-
-def generate_activation_token(user):
-    token = str(uuid.uuid4())
-    return token
-
+################################### Register User #######################################333
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_user(request):
@@ -98,6 +82,13 @@ def register_user(request):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+################################------------- Activate Email --------------------################################
+
+def generate_activation_token(user):
+    token = str(uuid.uuid4())
+    return token
+
 #Send Activation Email
 def send_activation_email(user, activation_token, current_site):
     subject = 'Activate Your Account'
@@ -110,9 +101,7 @@ def send_activation_email(user, activation_token, current_site):
     })
     user.email_user(subject, message)
 
-
-
-
+#
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 @csrf_exempt
@@ -133,3 +122,7 @@ def activate_user(request, uidb64, token):
             return Response({'message': 'Invalid activation link.'}, status=status.HTTP_400_BAD_REQUEST)
     except (TypeError, ValueError, OverflowError, MyUser.DoesNotExist, PasswordResetToken.DoesNotExist):
         return Response({'message': 'Invalid activation link.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
